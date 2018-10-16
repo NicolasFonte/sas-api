@@ -2,3 +2,7 @@ api:
   tmdb:
     key: ${API_KEY}
     url: https://api.themoviedb.org
+
+spring:
+  jpa:
+    show-sql: true
