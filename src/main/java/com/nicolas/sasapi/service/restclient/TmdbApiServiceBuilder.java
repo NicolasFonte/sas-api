@@ -2,40 +2,24 @@ package com.nicolas.sasapi.service.restclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.nicolas.sasapi.service.restclient.bean.TMDbResponseBean;
 import okhttp3.OkHttpClient.Builder;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okhttp3.logging.HttpLoggingInterceptor.Level;
-import retrofit2.Call;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
 
-public interface TMDbClientService {
+@Component
+public class TmdbApiServiceBuilder {
 
-    /**
-     * Gets most popular movies from TMDB api
-     *
-     * @param apiKey - user api key to validate
-     * @return popular movies from given page
-     */
-    @GET("/3/movie/popular")
-    Call<TMDbResponseBean> getMostPopulars(@Query("api_key") String apiKey);
+    private final String tmdbUrl;
 
+    public TmdbApiServiceBuilder(@Value("${api.tmdb.url}") String tmdbUrl) {
+        this.tmdbUrl = tmdbUrl;
+    }
 
-    /**
-     * Search Movies from name.
-     * It considers all original, translated, alternative names and titles.
-     *
-     * @param query - text ot seach
-     * @param apiKey - user api key to validate
-     * @return list of movies searched by name
-     */
-    @GET("/3/search/movie")
-    Call<TMDbResponseBean> searchByName(@Query("query") String query, @Query("api_key") String apiKey);
-
-    static TMDbClientService buildTmdbClientService(String tmdbUrl) {
+    TmdbApiService buildTmdbApiService() {
         Builder httpClient = getOkHttpClientBuilder();
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -46,10 +30,10 @@ public interface TMDbClientService {
                 .client(httpClient.build())
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
                 .build()
-                .create(TMDbClientService.class);
+                .create(TmdbApiService.class);
     }
 
-    static Builder getOkHttpClientBuilder() {
+    private static Builder getOkHttpClientBuilder() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(Level.HEADERS);
 

@@ -1,19 +1,32 @@
 package com.nicolas.sasapi.domainvalue;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
+@AllArgsConstructor
+@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TMDbMovie {
+public class TmdbMovie {
 
-    private Long id;
+    public TmdbMovie() {
+
+    }
+
+    @JsonProperty("id")
+    private Long imdbId;
 
     private String title;
 
     private String originalTitle;
 
-    private Float popularity;
+    private BigDecimal popularity;
 
     private String releaseDate;
 
@@ -23,7 +36,7 @@ public class TMDbMovie {
 
     private String originalLanguage;
 
-    private Float voteAverage;
+    private BigDecimal voteAverage;
 
     private Long voteCount;
 
