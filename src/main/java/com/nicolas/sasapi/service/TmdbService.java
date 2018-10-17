@@ -24,20 +24,9 @@ public class TmdbService {
         this.tmdbApiService = tmdbApiService;
     }
 
-    public List<TmdbMovie> getTmdbMostPopulars() throws TmdbClientException {
+    public List<TmdbMovie> getTmdbMostPopular() throws TmdbClientException {
         try {
-            Response<TmdbResponse> tmdbResponse = tmdbApiService.getMostPopulars("1").execute();
-            TmdbResponse tmdbResponseBean = fetchResponse(tmdbResponse);
-            return tmdbResponseBean.getTmdbMovies();
-        } catch (IOException ex) {
-            log.error("Error when fetching most popular movies", ex);
-            throw new TmdbClientException(ex.getMessage());
-        }
-    }
-
-    public List<TmdbMovie> searchTmdbMovie(String name) throws TmdbClientException {
-        try {
-            Response<TmdbResponse> tmdbResponse = tmdbApiService.searchByName(name, apiKey).execute();
+            Response<TmdbResponse> tmdbResponse = tmdbApiService.getMostPopular(apiKey).execute();
             TmdbResponse tmdbResponseBean = fetchResponse(tmdbResponse);
             return tmdbResponseBean.getTmdbMovies();
         } catch (IOException ex) {
@@ -46,13 +35,24 @@ public class TmdbService {
         }
     }
 
-    private TmdbResponse fetchResponse(Response<TmdbResponse> tmdbResponse) throws TmdbClientException, IOException {
-        // tmdb service is up but failed in respond
-        if (!tmdbResponse.isSuccessful()) {
-            log.error("TMDB API error. reason: {}", tmdbResponse.message());
-            throw new TmdbClientException(tmdbResponse.message());
+    public List<TmdbMovie> searchTmdbMovie(String name) throws TmdbClientException {
+        try {
+            Response<TmdbResponse> tmdbApiResponse = tmdbApiService.searchByName(name, apiKey).execute();
+            TmdbResponse tmdbResponseBean = fetchResponse(tmdbApiResponse);
+            return tmdbResponseBean.getTmdbMovies();
+        } catch (IOException ex) {
+            log.error("TMDB API was not reached. Probably down.", ex);
+            throw new TmdbClientException(ex.getMessage());
         }
-        TmdbResponse tmdbResponseBody = tmdbResponse.body();
+    }
+
+    private TmdbResponse fetchResponse(Response<TmdbResponse> tmdbApiResponse) throws TmdbClientException, IOException {
+        // tmdb service is up but failed in respond
+        if (!tmdbApiResponse.isSuccessful()) {
+            log.error("TMDB API error. reason: {}", tmdbApiResponse.message());
+            throw new TmdbClientException(tmdbApiResponse.message());
+        }
+        TmdbResponse tmdbResponseBody = tmdbApiResponse.body();
         // most likely server request was ok non expected json sent
         if (tmdbResponseBody == null) {
             log.error("TMDB API returned invalid json.");

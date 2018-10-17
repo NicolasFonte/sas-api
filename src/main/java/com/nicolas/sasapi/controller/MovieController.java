@@ -27,8 +27,8 @@ public class MovieController {
     }
 
     @GetMapping
-    public List<TmdbMovie> getTmdbMostPopulars() throws TmdbClientException {
-        return tmdbService.getTmdbMostPopulars();
+    public List<TmdbMovie> getTmdbMostPopular() throws TmdbClientException {
+        return tmdbService.getTmdbMostPopular();
     }
 
     @GetMapping("/{name}")
