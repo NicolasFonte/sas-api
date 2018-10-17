@@ -14,9 +14,9 @@ public class RetrofitTmdbApiService implements TmdbApiService {
     }
 
     @Override
-    public Call<TmdbResponse> getMostPopulars(String apiKey) {
+    public Call<TmdbResponse> getMostPopular(String apiKey) {
         TmdbApiService tmdbApiService = tmdbApiServiceBuilder.buildTmdbApiService();
-        return tmdbApiService.getMostPopulars(apiKey);
+        return tmdbApiService.getMostPopular(apiKey);
     }
 
     @Override

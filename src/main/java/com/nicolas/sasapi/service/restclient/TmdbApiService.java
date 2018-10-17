@@ -14,7 +14,7 @@ public interface TmdbApiService {
      * @return popular movies from given page
      */
     @GET("/3/movie/popular")
-    Call<TmdbResponse> getMostPopulars(@Query("api_key") String apiKey);
+    Call<TmdbResponse> getMostPopular(@Query("api_key") String apiKey);
 
 
     /**
