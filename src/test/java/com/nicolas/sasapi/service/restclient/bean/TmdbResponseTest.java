@@ -24,7 +24,7 @@ public class TmdbResponseTest {
         Assertions.assertThat(tmdbResponseDTO.getTmdbMovies())
                 .hasSize(20)
                 .extracting("title", "imdbId", "voteCount")
-                .contains(Tuple.tuple("Venom", 335983L, 1103));
+                .contains(Tuple.tuple("Venom", 335983L, 1103L));
 
     }
 }
