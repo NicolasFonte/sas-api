@@ -15,8 +15,8 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public List<FavoriteMovie> findTopFavorites(int limit) {
-        List<FavoriteMovie> mostFavorites = movieRepository.getMostFavorites();
+    public List<FavoriteMovie> findTopFavoriteMovies(int limit) {
+        List<FavoriteMovie> mostFavorites = movieRepository.findTopFavoriteMovies();
         return mostFavorites.stream()
                 .limit(limit)
                 .collect(Collectors.toList());

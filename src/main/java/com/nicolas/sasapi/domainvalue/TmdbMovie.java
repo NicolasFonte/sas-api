@@ -20,7 +20,7 @@ public class TmdbMovie {
     }
 
     @JsonProperty("id")
-    private Long imdbId;
+    private Long tmdbId;
 
     private String title;
 
