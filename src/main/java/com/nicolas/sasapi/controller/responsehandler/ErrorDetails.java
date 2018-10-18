@@ -1,4 +1,4 @@
-package com.nicolas.sasapi.controller.validation;
+package com.nicolas.sasapi.controller.responsehandler;
 
 import java.util.Date;
 import lombok.Getter;
@@ -9,9 +9,9 @@ class ErrorDetails {
     private Date timestamp;
     private String message;
 
-    ErrorDetails(Date timestamp, String message) {
+    ErrorDetails(String message) {
         super();
-        this.timestamp = timestamp;
         this.message = message;
+        this.timestamp = new Date();
     }
 }

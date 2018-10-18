@@ -6,3 +6,7 @@ api:
 spring:
   jpa:
     show-sql: true
+
+logging:
+  file: sas.log
+

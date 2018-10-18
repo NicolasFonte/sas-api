@@ -24,7 +24,7 @@ public class TmdbService {
         this.tmdbApiService = tmdbApiService;
     }
 
-    public List<TmdbMovie> getTmdbMostPopular() throws TmdbClientException {
+    public List<TmdbMovie> getTmdbMostPopularMovies() throws TmdbClientException {
         try {
             Response<TmdbResponse> tmdbResponse = tmdbApiService.getMostPopular(apiKey).execute();
             TmdbResponse tmdbResponseBean = fetchResponse(tmdbResponse);

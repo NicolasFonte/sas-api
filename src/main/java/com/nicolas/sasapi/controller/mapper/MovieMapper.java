@@ -3,14 +3,13 @@ package com.nicolas.sasapi.controller.mapper;
 import com.nicolas.sasapi.domain.FavoriteMovie;
 import com.nicolas.sasapi.domainvalue.TmdbMovie;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MovieMapper {
 
     public static FavoriteMovie fromTmdb(TmdbMovie tmdbMovie) {
         return FavoriteMovie.builder()
-                .imdbId(tmdbMovie.getImdbId())
+                .tmdbId(tmdbMovie.getTmdbId())
                 .adult(tmdbMovie.getAdult())
                 .overview(tmdbMovie.getOverview())
                 .popularity(tmdbMovie.getPopularity())
@@ -30,7 +29,7 @@ public class MovieMapper {
     private static TmdbMovie toTmdb(FavoriteMovie favoriteMovie) {
         return TmdbMovie.builder()
                 .adult(favoriteMovie.getAdult())
-                .imdbId(favoriteMovie.getImdbId())
+                .tmdbId(favoriteMovie.getTmdbId())
                 .overview(favoriteMovie.getOverview())
                 .popularity(favoriteMovie.getPopularity())
                 .releaseDate(favoriteMovie.getReleaseDate())

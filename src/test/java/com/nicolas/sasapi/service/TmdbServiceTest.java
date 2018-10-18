@@ -51,11 +51,11 @@ public class TmdbServiceTest {
         Call<TmdbResponse> retrofitMockCaller = Calls.response(tmdbApiResponse);
         when(tmdbApiService.getMostPopular(TEST_KEY)).thenReturn(retrofitMockCaller);
 
-        List<TmdbMovie> tmdbMostPopular = tmdbService.getTmdbMostPopular();
+        List<TmdbMovie> tmdbMostPopular = tmdbService.getTmdbMostPopularMovies();
 
         Assertions.assertThat(tmdbMostPopular)
                 .hasSize(2)
-                .extracting("imdbId", "title")
+                .extracting("tmdbId", "title")
                 .containsExactly(Tuple.tuple(10L, "first"), Tuple.tuple(20L, "second"));
     }
 
@@ -67,7 +67,7 @@ public class TmdbServiceTest {
         thrown.expect(TmdbClientException.class);
         thrown.expectMessage("unknown server");
 
-        tmdbService.getTmdbMostPopular();
+        tmdbService.getTmdbMostPopularMovies();
     }
 
     @Test
@@ -79,7 +79,7 @@ public class TmdbServiceTest {
         thrown.expect(TmdbClientException.class);
         thrown.expectMessage("Invalid Json returned from TMDB API");
 
-        tmdbService.getTmdbMostPopular();
+        tmdbService.getTmdbMostPopularMovies();
     }
 
     @Test
@@ -92,7 +92,7 @@ public class TmdbServiceTest {
 
         thrown.expect(TmdbClientException.class);
 
-        tmdbService.getTmdbMostPopular();
+        tmdbService.getTmdbMostPopularMovies();
     }
 
     @Test
@@ -104,7 +104,7 @@ public class TmdbServiceTest {
 
         Assertions.assertThat(tmdbMostPopular)
                 .hasSize(2)
-                .extracting("imdbId", "title")
+                .extracting("tmdbId", "title")
                 .containsExactly(Tuple.tuple(10L, "first"), Tuple.tuple(20L, "second"));
     }
 
@@ -122,11 +122,11 @@ public class TmdbServiceTest {
 
     private List<TmdbMovie> testTmdbMovies() {
         TmdbMovie tmdbSample1 = TmdbMovie.builder()
-                .imdbId(10L)
+                .tmdbId(10L)
                 .title("first").build();
 
         TmdbMovie tmdbSample2 = TmdbMovie.builder()
-                .imdbId(20L)
+                .tmdbId(20L)
                 .title("second")
                 .build();
         return Arrays.asList(tmdbSample1, tmdbSample2);

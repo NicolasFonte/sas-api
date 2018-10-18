@@ -1,11 +1,11 @@
 -- initial users as example
 insert into user values(1, 'vitor');
-insert into user values(2, 'menders');
+insert into user values(2, 'mendes');
 insert into user values(3, 'nicolas');
 
-insert into favorite values(1, FALSE , 335983, 'test1', 10.0, '2018-10-03', 'Venom', 7.6, 1057);
-insert into favorite values(2, FALSE, 335984, 'test2', 10.0, '2018-10-04', 'Venom', 8.6, 1058);
-insert into favorite values(3, FALSE, 335985, 'test3', 10.0, '2018-10-05', 'Venom', 9.6, 1059);
+insert into favorite values(1, FALSE, 'most favorite', 15.0, '2018-10-03', 'title1',  335983, 14.5, 100);
+insert into favorite values(2, FALSE, 'second favorite', 12.0, '2018-10-04', 'title2',  335985, 18.5, 150);
+insert into favorite values(3, FALSE, 'third favorite', 20.0, '2018-10-05', 'title3',  335986, 20.5, 200);
 
 insert into user_favorite values(1, 1);
 

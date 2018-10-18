@@ -5,10 +5,12 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +20,9 @@ import lombok.Setter;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "LOCATION_SEQ_GEN", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(sequenceName = "location_sequence_name", name = "LOCATION_SEQ_GEN", initialValue = 4)
+
     private Long id;
 
     private String name;

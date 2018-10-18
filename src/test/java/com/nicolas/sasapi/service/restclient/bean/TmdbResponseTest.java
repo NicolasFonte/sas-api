@@ -23,7 +23,7 @@ public class TmdbResponseTest {
         Assertions.assertThat(tmdbResponseDTO.getTotalResults()).isEqualTo(19853L);
         Assertions.assertThat(tmdbResponseDTO.getTmdbMovies())
                 .hasSize(20)
-                .extracting("title", "imdbId", "voteCount")
+                .extracting("title", "tmdbId", "voteCount")
                 .contains(Tuple.tuple("Venom", 335983L, 1103L));
 
     }
