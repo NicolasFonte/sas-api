@@ -46,13 +46,24 @@ public class TmdbService {
         }
     }
 
-    private TmdbResponse fetchResponse(Response<TmdbResponse> tmdbApiResponse) throws TmdbClientException, IOException {
+    TmdbMovie findByTmdbId(Long imdbId) throws TmdbClientException {
+        try {
+            Response<TmdbMovie> tmdbApiResponse = tmdbApiService.findByTmdbId(imdbId, apiKey).execute();
+            return fetchResponse(tmdbApiResponse);
+        } catch (IOException ex) {
+            log.error("TMDB API was not reached. Probably down.", ex);
+            throw new TmdbClientException(ex.getMessage());
+        }
+    }
+
+
+    private <T> T fetchResponse(Response<T> tmdbApiResponse) throws TmdbClientException, IOException {
         // tmdb service is up but failed in respond
         if (!tmdbApiResponse.isSuccessful()) {
             log.error("TMDB API error. reason: {}", tmdbApiResponse.message());
-            throw new TmdbClientException(tmdbApiResponse.message());
+            throw new TmdbClientException(tmdbApiResponse.message(), tmdbApiResponse.code());
         }
-        TmdbResponse tmdbResponseBody = tmdbApiResponse.body();
+        T tmdbResponseBody = tmdbApiResponse.body();
         // most likely server request was ok non expected json sent
         if (tmdbResponseBody == null) {
             log.error("TMDB API returned invalid json.");

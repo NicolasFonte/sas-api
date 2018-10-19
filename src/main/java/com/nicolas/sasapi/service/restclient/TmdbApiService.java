@@ -1,8 +1,10 @@
 package com.nicolas.sasapi.service.restclient;
 
+import com.nicolas.sasapi.domainvalue.TmdbMovie;
 import com.nicolas.sasapi.service.restclient.bean.TmdbResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface TmdbApiService {
@@ -27,4 +29,17 @@ public interface TmdbApiService {
      */
     @GET("/3/search/movie")
     Call<TmdbResponse> searchByName(@Query("query") String query, @Query("api_key") String apiKey);
+
+    // /movie/{movie_id}
+
+    /**
+     * Get single movie by its Tmdb Id
+     *
+     * @param tmdbId - movie id to find
+     * @param apiKey - user api key to validate
+     * @return movie from given tmdb id
+     */
+    @GET("/3/movie/{movie_id}")
+    Call<TmdbMovie> findByTmdbId(@Path("movie_id") Long tmdbId, @Query("api_key") String apiKey);
+
 }

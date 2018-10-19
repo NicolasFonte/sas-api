@@ -1,5 +1,6 @@
 package com.nicolas.sasapi.service.restclient;
 
+import com.nicolas.sasapi.domainvalue.TmdbMovie;
 import com.nicolas.sasapi.service.restclient.bean.TmdbResponse;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
@@ -24,5 +25,12 @@ public class RetrofitTmdbApiService implements TmdbApiService {
         TmdbApiService tmdbApiService = tmdbApiServiceBuilder.buildTmdbApiService();
         return tmdbApiService.searchByName(query, apiKey);
     }
+
+    @Override
+    public Call<TmdbMovie> findByTmdbId(Long tmdbId, String apiKey) {
+        TmdbApiService tmdbApiService = tmdbApiServiceBuilder.buildTmdbApiService();
+        return tmdbApiService.findByTmdbId(tmdbId, apiKey);
+    }
+
 
 }

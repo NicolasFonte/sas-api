@@ -1,5 +1,6 @@
 package com.nicolas.sasapi.domainvalue;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
@@ -24,8 +25,6 @@ public class TmdbMovie {
 
     private String title;
 
-    private String originalTitle;
-
     private BigDecimal popularity;
 
     private String releaseDate;
@@ -33,8 +32,6 @@ public class TmdbMovie {
     private Boolean adult;
 
     private String overview;
-
-    private String originalLanguage;
 
     private BigDecimal voteAverage;
 

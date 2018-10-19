@@ -1,7 +1,10 @@
 package com.nicolas.sasapi.service;
 
+import static com.nicolas.sasapi.controller.mapper.MovieMapper.fromTmdb;
+
 import com.nicolas.sasapi.domain.FavoriteMovie;
 import com.nicolas.sasapi.domain.User;
+import com.nicolas.sasapi.exception.TmdbClientException;
 import com.nicolas.sasapi.exception.TmdbIdExistsException;
 import com.nicolas.sasapi.exception.UserNotFoundException;
 import com.nicolas.sasapi.repository.MovieRepository;
@@ -18,33 +21,45 @@ public class UserService {
 
     private final MovieRepository movieRepository;
 
-    public UserService(UserRepository userRepository, MovieRepository movieRepository) {
+    private final TmdbService tmdbService;
+
+    public UserService(UserRepository userRepository, MovieRepository movieRepository,
+            TmdbService tmdbService) {
         this.userRepository = userRepository;
         this.movieRepository = movieRepository;
+        this.tmdbService = tmdbService;
     }
 
-    public User addFavoriteMovie(Long userId, FavoriteMovie favoriteMovie)
-            throws TmdbIdExistsException, UserNotFoundException {
+    public List<FavoriteMovie> findUserFavoriteMovies(Long userId) throws UserNotFoundException {
         User user = findUser(userId);
-        checkMovieMarked(user, favoriteMovie);
-
-        FavoriteMovie movieToStore = movieRepository.findByTmdbId(favoriteMovie.getTmdbId()).orElse(favoriteMovie);
-
-        // update dynamic data from tmdb
-        movieToStore.setPopularity(favoriteMovie.getPopularity());
-        movieToStore.setVoteAverage(favoriteMovie.getVoteAverage());
-        movieToStore.setVoteCount(favoriteMovie.getVoteCount());
-        user.addFavorite(movieToStore);
-        return userRepository.save(user);
-
+        return user.getFavorites();
     }
 
-    private void checkMovieMarked(User user, FavoriteMovie favoriteMovie) throws TmdbIdExistsException {
+    public User addFavoriteMovie(Long userId, Long tmdbId)
+            throws TmdbIdExistsException, UserNotFoundException, TmdbClientException {
+        User user = findUser(userId);
+        checkMovieMarked(user, tmdbId);
+        FavoriteMovie movieToStore = findMovieToStore(tmdbId);
+        user.addFavorite(movieToStore);
+
+        return userRepository.save(user);
+    }
+
+    private FavoriteMovie findMovieToStore(Long tmdbId) throws TmdbClientException {
+        FavoriteMovie movieToStore = movieRepository.findByTmdbId(tmdbId).orElse(null);
+        if (movieToStore == null) {
+            log.info("Movie id {} not exists in out system. Fetching from TMDB");
+            movieToStore = fromTmdb(tmdbService.findByTmdbId(tmdbId));
+        }
+        return movieToStore;
+    }
+
+    private void checkMovieMarked(User user, Long tmdbId) throws TmdbIdExistsException {
         boolean tmdbExists = user.getFavorites().stream()
-                .anyMatch(fav -> fav.getTmdbId().equals(favoriteMovie.getTmdbId()));
+                .anyMatch(fav -> fav.getTmdbId().equals(tmdbId));
         if (tmdbExists) {
             log.info("Movie already selected as favorite");
-            throw new TmdbIdExistsException(favoriteMovie.getTmdbId());
+            throw new TmdbIdExistsException(tmdbId);
         }
     }
 
@@ -56,8 +71,4 @@ public class UserService {
                 });
     }
 
-    public List<FavoriteMovie> findUserFavoriteMovies(Long userId) throws UserNotFoundException {
-        User user = findUser(userId);
-        return user.getFavorites();
-    }
 }

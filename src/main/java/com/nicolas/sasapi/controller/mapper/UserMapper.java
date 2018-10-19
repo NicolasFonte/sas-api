@@ -1,7 +1,7 @@
 package com.nicolas.sasapi.controller.mapper;
 
 import com.nicolas.sasapi.domain.User;
-import com.nicolas.sasapi.controller.response.UserResponse;
+import com.nicolas.sasapi.controller.bean.UserResponse;
 
 public class UserMapper {
 
