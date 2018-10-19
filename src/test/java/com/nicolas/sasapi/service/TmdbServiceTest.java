@@ -1,5 +1,7 @@
 package com.nicolas.sasapi.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.Mockito.*;
 
 import com.nicolas.sasapi.domainvalue.TmdbMovie;
@@ -11,8 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
-import org.assertj.core.api.Assertions;
-import org.assertj.core.groups.Tuple;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,20 +29,20 @@ public class TmdbServiceTest {
 
     private static final String TEST_KEY = "TEST-KEY";
 
+    private TmdbService tmdbService;
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
-    private TmdbService tmdbService;
 
     @Mock
     private TmdbApiService tmdbApiService;
 
-    @Mock
-    private TmdbResponse tmdbApiResponse;
+    private TmdbResponse tmdbApiResponse = testTmdbResponse();
+
+    private TmdbMovie tmdbMovie = createTmdbMovie(30L, "sample");
 
     @Before
     public void setUp() {
-        when(tmdbApiResponse.getTmdbMovies()).thenReturn(testTmdbMovies());
         tmdbService = new TmdbService(TEST_KEY, tmdbApiService);
     }
 
@@ -53,10 +53,10 @@ public class TmdbServiceTest {
 
         List<TmdbMovie> tmdbMostPopular = tmdbService.getTmdbMostPopularMovies();
 
-        Assertions.assertThat(tmdbMostPopular)
+        assertThat(tmdbMostPopular)
                 .hasSize(2)
                 .extracting("tmdbId", "title")
-                .containsExactly(Tuple.tuple(10L, "first"), Tuple.tuple(20L, "second"));
+                .containsExactly(tuple(10L, "first"), tuple(20L, "second"));
     }
 
     @Test
@@ -102,10 +102,10 @@ public class TmdbServiceTest {
 
         List<TmdbMovie> tmdbMostPopular = tmdbService.searchTmdbMovie("name");
 
-        Assertions.assertThat(tmdbMostPopular)
+        assertThat(tmdbMostPopular)
                 .hasSize(2)
                 .extracting("tmdbId", "title")
-                .containsExactly(Tuple.tuple(10L, "first"), Tuple.tuple(20L, "second"));
+                .containsExactly(tuple(10L, "first"), tuple(20L, "second"));
     }
 
     @Test
@@ -119,17 +119,42 @@ public class TmdbServiceTest {
         tmdbService.searchTmdbMovie("name");
     }
 
+    @Test
+    public void testFindTmdbMovieFromApi() throws Exception {
+        Call<TmdbMovie> retrofitMockCaller = Calls.response(tmdbMovie);
+        when(tmdbApiService.findByTmdbId(30L, TEST_KEY)).thenReturn(retrofitMockCaller);
 
-    private List<TmdbMovie> testTmdbMovies() {
-        TmdbMovie tmdbSample1 = TmdbMovie.builder()
-                .tmdbId(10L)
-                .title("first").build();
+        TmdbMovie tmdbMovie = tmdbService.findByTmdbId(30L);
 
-        TmdbMovie tmdbSample2 = TmdbMovie.builder()
-                .tmdbId(20L)
-                .title("second")
-                .build();
-        return Arrays.asList(tmdbSample1, tmdbSample2);
+        assertThat(tmdbMovie)
+                .extracting("tmdbId", "title")
+                .contains(30L, "sample");
     }
+
+    @Test
+    public void testFindTmdbMovieServerFailsExpectsTmdbClientException() throws Exception {
+        Call<TmdbMovie> retrofitMockCaller = Calls.failure(new UnknownHostException("unknown server"));
+        when(tmdbApiService.findByTmdbId(30L, TEST_KEY)).thenReturn(retrofitMockCaller);
+
+        thrown.expect(TmdbClientException.class);
+        thrown.expectMessage("unknown server");
+
+        tmdbService.findByTmdbId(30L);
+    }
+
+
+    private TmdbResponse testTmdbResponse() {
+        TmdbResponse response = new TmdbResponse();
+        List<TmdbMovie> tmdbMovies = Arrays.asList(createTmdbMovie(10L, "first"), createTmdbMovie(20L, "second"));
+        response.setTmdbMovies(tmdbMovies);
+        return response;
+    }
+
+    private TmdbMovie createTmdbMovie(Long imdbId, String title) {
+        return TmdbMovie.builder()
+                .tmdbId(imdbId)
+                .title(title).build();
+    }
+
 
 }

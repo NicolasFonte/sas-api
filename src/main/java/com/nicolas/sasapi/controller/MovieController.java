@@ -41,16 +41,16 @@ public class MovieController {
         return tmdbService.getTmdbMostPopularMovies();
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/{query}")
     @ApiOperation("Search TMDB movie by its name.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Popular Movies retrieved successfully"),
             @ApiResponse(code = 500, message = "Error fetching TMDB APi")})
-    public List<TmdbMovie> searchTmdbMovie(@PathVariable("name") String movieName) throws TmdbClientException {
+    public List<TmdbMovie> searchTmdbMovie(@PathVariable("query") String movieName) throws TmdbClientException {
         return tmdbService.searchTmdbMovie(movieName);
     }
 
-    @GetMapping("/favorite_movies")
+    @GetMapping("/top_favorite")
     @ApiOperation("find most favorite movies according SAS Movie App.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Most Favorite movies retrieved"),

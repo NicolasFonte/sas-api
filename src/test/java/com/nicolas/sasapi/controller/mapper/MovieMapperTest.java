@@ -33,8 +33,8 @@ public class MovieMapperTest {
 
     @Test
     public void testDTOConvertedToEntity() throws Exception {
-        TmdbMovie tmdbMovie = new TmdbMovie(1L, "venom", "venom1", BigDecimal.TEN, "05/12/2018", false, "overview",
-                "EN", BigDecimal.TEN, 1L);
+        TmdbMovie tmdbMovie = new TmdbMovie(1L, "venom", BigDecimal.TEN, "05/12/2018", false, "overview",
+                BigDecimal.TEN, 1L);
 
         FavoriteMovie favoriteMovie = MovieMapper.fromTmdb(tmdbMovie);
 

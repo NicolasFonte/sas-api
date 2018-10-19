@@ -61,7 +61,7 @@
       <version>${springfox-swagger2.version}</version>
     </dependency>
 
-    <!-- H2 in memory database - Testing purposes -->
+    <!-- H2 database and liquibase - Testing purposes -->
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
