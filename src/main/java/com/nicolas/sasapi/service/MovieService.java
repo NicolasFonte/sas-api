@@ -1,13 +1,25 @@
 package com.nicolas.sasapi.service;
 
-import com.nicolas.sasapi.domainvalue.TMDbMovie;
-import com.nicolas.sasapi.exception.TmdbClientException;
+import com.nicolas.sasapi.domain.FavoriteMovie;
+import com.nicolas.sasapi.repository.MovieRepository;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
-public interface MovieService {
+@Service
+public class MovieService {
 
-    List<TMDbMovie> findMostPopulars() throws TmdbClientException;
+    private final MovieRepository movieRepository;
 
-    List<TMDbMovie> searchByName(String name) throws TmdbClientException;
+    public MovieService(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
+    }
 
+    public List<FavoriteMovie> findTopFavoriteMovies(int limit) {
+        List<FavoriteMovie> mostFavorites = movieRepository.findTopFavoriteMovies();
+        return mostFavorites.stream()
+                .limit(limit)
+                .collect(Collectors.toList());
+
+    }
 }

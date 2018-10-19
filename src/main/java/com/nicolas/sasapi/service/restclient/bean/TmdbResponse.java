@@ -1,12 +1,14 @@
 package com.nicolas.sasapi.service.restclient.bean;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nicolas.sasapi.domainvalue.TMDbMovie;
+import com.nicolas.sasapi.domainvalue.TmdbMovie;
 import java.util.List;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-public class TMDbResponseBean {
+@Setter
+public class TmdbResponse {
 
     private Long page;
 
@@ -15,5 +17,5 @@ public class TMDbResponseBean {
     private Long totalPages;
 
     @JsonProperty("results")
-    private List<TMDbMovie> tmDbMovies;
+    private List<TmdbMovie> tmdbMovies;
 }
